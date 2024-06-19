@@ -1,0 +1,93 @@
+path: 'data/NHANES/'
+years: ['1999-2000','2001-2002','2003-2004','2005-2006','2007-2008','2009-2010','2011-2012','2013-2014','2015-2016','2017-2018'] # ['2017-2020']
+codebook: 'NHANES_codes_*year*.json'
+out_path: 'data/NHANES/'
+output: 'NHANES_hypertension'
+
+variables:
+    #Age: 
+    RIDAGEYR: 'Age in years at screening'
+    
+    #Gender: 
+    RIAGENDR: 'Gender' # 1 = Male, 2 = Female, 
+    
+    #Smoking: 
+    SMD460: '# of people who live here smoke tobacco?' #NOT IN EARLY NHANES, REPLACED WITH SMD415 or SMD415A
+    SMQ020: 'Smoked at least 100 cigarettes in life'
+    SMDANY: 'Used any tobacco product last 5 days?' #NOT IN EARLY NHANES, REPLACED WITH SMD680 
+    SMD680: 'Used tobacco/nicotine last 5 days?'
+    SMD415: 'Total number of smokers in home' #NOT IN EARLY NHANES, REPLACED WITH SMD415A 
+    SMD415A: 'Total # of cigarette smokers in home'
+    
+    #Income: 
+    INDFMMPI: 'Family monthly poverty level index' #NOT IN EARLY NHANES. No good replacement
+    
+    #Physical activity: 
+    PAD645: 'Minutes walk/bicycle for transportation' #NOT IN EARLY NHANES. No good replacement
+    PAD660: 'Minutes vigorous recreational activities' #NOT IN EARLY NHANES. No good replacement
+    PAD675: 'Minutes moderate recreational activities' #NOT IN EARLY NHANES. No good replacement
+    PAD020: 'Walked or bicycled over past 30 days'
+    PAD200: 'Vigorous activity over past 30 days'
+    PAD320: 'Moderate activity over past 30 days'
+    
+    #Diabetes: 
+    DIQ010: 'Doctor told you have diabetes'
+    
+    #Weight: 
+    BMXWT: 'Weight (kg)'
+    
+    #Height: 
+    BMXHT: 'Standing Height (cm)'
+    
+    #BMI: 
+    BMXBMI: 'Body Mass Index (kg/m**2)'
+    
+    #Body: 
+    BMXWAIST: 'Waist Circumference (cm)'
+    BMXHIP: 'Hip Circumference (cm)' #NOT IN EARLY NHANES. No good replacement
+    
+    #Teeth: 
+    OHAROCDT: 'Decayed teeth'
+    OHAROCGP: 'Gum disease/problem'
+    OHARNF: 'No significant findings'
+    
+    #Alcohol: 
+    ALQ121: 'Past 12 mo how often drink alcoholic bev' # NOT IN EARLY NHANES, SORT OF REPLACED BY ALQ120Q
+    ALQ120Q: 'How often drink alcohol over past 12 mos'
+    
+    #History of hypertension: 
+    BPQ020: 'Ever told you had high blood pressure'
+    
+    #Salt: 
+    MCQ366C: 'Doctor told you to reduce salt in diet' #NOT IN EARLY NHANES. No good replacement
+    DBD100: 'How often add salt to food at table' #NOT IN EARLY NHANES. No good replacement
+    
+    #Fat: 
+    DR1TTFAT: 'Total fat (gm)' # NOT IN EARLY NHANES, REPLACED BY DXITFAT
+    DR1TSFAT: 'Total saturated fatty acids (gm)'  # NOT IN EARLY NHANES, REPLACED BY DRXISFAT
+    DRXTTFAT: 'Total fat (gm)'
+    DRXTSFAT: 'Total saturated fatty acids (gm)'
+
+    #Blood pressure: 
+    BPXOSY1: 'Systolic - 1st oscillometric reading' # NOT IN EARLY NHANES, REPLACED BY BPXSY1
+    BPXODI1: 'Diastolic - 1st oscillometric reading' # NOT IN EARLY NHANES, REPLACED BY BPXDI1
+    BPXSY1: 'Systolic: Blood pres (1st rdg) mm Hg'
+    BPXDI1: 'Diastolic: Blood pres (1st rdg) mm Hg'
+    
+    #Bio: 
+    LBXSAL: 'Albumin, refrigerated serum (g/dL)'
+    LBXSGL: 'Glucose, refrigerated serum (mg/dL)'
+    LBXSCH: 'Cholesterol, refrigerated serum (mg/dL)'
+    LBXSUA: 'Uric acid (mg/dL)'
+    LBXSKSI: 'Potassium (mmol/L)'
+    
+    #History: 
+    MCQ160C: 'Ever told you had coronary heart disease'
+    MCQ080: 'Doctor ever said you were overweight'
+        
+    #Occupation: 
+    OCQ180: 'Hours worked last week in total all jobs' # NOT IN EARLY NHANES, REPLACED BY OCD180
+    OCD383: 'Main reason did not work last week' # NOT IN EARLY NHANES, REPLACED BY OCQ380
+    OCD180: 'Hours worked last week at all jobs'
+    OCQ380: 'Main reason did not work last week'
+
