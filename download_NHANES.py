@@ -1,7 +1,9 @@
+import pathlib
+import shutil
+import time
+
 import pandas as pd
-import numpy as np
-import os, subprocess
-import urllib.request
+import os
 import requests
 from bs4 import BeautifulSoup
 
@@ -100,12 +102,19 @@ def format_size(s):
         return 0
 
 def download_if_not_exist(url, path, file=True):
+    path = pathlib.Path(path)
     if file:
-        if not os.path.isfile(path):
-            subprocess.run(["curl", url, "-o", path]) 
-            
+        t0 = time.perf_counter()
+
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            with path.open("wb") as f:
+                shutil.copyfileobj(r.raw, f)
+        dt = time.perf_counter() - t0
+        print(f"<{r.status_code}>  {path.stat().st_size/1024/1024:.1f} MiB  {dt:.2f}s  {path.stat().st_size/dt/1024/1024:.1f} MiB/s  {path.name}")
+
     # Not really necessary
-    if not os.path.isfile(path):
+    if not path.is_file():
         page = requests.get(url)
         f = open(path, 'w')
         f.write(page.text)
@@ -163,7 +172,7 @@ def download_NHANES():
         
         if data_size > 1000:
             print('File %s, %s is larger than 1GB. Skipping' % (data_url, doc_url))
-        
+            continue
         fdir = os.path.join('data', 'NHANES', year, r['section'])
         os.makedirs(fdir, exist_ok=True)
 
