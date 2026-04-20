@@ -1,4 +1,7 @@
-import sys, os
+import contextlib
+import gzip
+import pathlib
+import os
 import argparse
 import numpy as np
 import pandas as pd
@@ -6,6 +9,13 @@ from bs4 import BeautifulSoup
 import json
 
 from nhanes.util import *
+
+def read_htm(file: os.PathLike):
+    with contextlib.suppress(UnicodeDecodeError):
+        return pathlib.Path(file).read_text()
+    # In case the file arrived as a tarball
+    with gzip.open(file, "rt") as f:
+        return f.read()
 
 def create_codebook(cfg):
     """ Creates a codebook for each year specified in the config file, and
@@ -31,8 +41,7 @@ def create_codebook(cfg):
         for file in files:
             print('Parsing %s...' % file)
             
-            f = open(os.path.join(base_dir, file), 'r')
-            S = f.read()
+            S = read_htm(os.path.join(base_dir, file))
             soup = BeautifulSoup(S, "html.parser")
 
             rows = soup.find_all("div", attrs={'class': 'pagebreak'})
