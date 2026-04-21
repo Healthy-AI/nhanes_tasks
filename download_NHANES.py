@@ -79,14 +79,20 @@ URLs = {
         'LABORATORY': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2017",
         'QUESTIONNAIRE': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Questionnaire&CycleBeginYear=2017"
     },
-    # Removed since it has a different format for the columns
-    #'2017-2020': {
-    #    'DEMOGRAPHICS': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Demographics&Cycle=2017-2020",
-    #    'DIETARY': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Dietary&Cycle=2017-2020",
-    #    'EXAMINATION': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Examination&Cycle=2017-2020",
-    #    'LABORATORY': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&Cycle=2017-2020",
-    #    'QUESTIONNAIRE': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Questionnaire&Cycle=2017-2020"
-    #},
+    '2017-2020': {
+       'DEMOGRAPHICS': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Demographics&Cycle=2017-2020",
+       'DIETARY': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Dietary&Cycle=2017-2020",
+       'EXAMINATION': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Examination&Cycle=2017-2020",
+       'LABORATORY': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&Cycle=2017-2020",
+       'QUESTIONNAIRE': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Questionnaire&Cycle=2017-2020"
+    },
+    '2021-2023': {
+       'DEMOGRAPHICS': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Demographics&Cycle=2021-2023",
+       'DIETARY': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Dietary&Cycle=2021-2023",
+       'EXAMINATION': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Examination&Cycle=2021-2023",
+       'LABORATORY': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&Cycle=2021-2023",
+       'QUESTIONNAIRE': "https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Questionnaire&Cycle=2021-2023"
+    },
 }
 
 def format_size(s):
@@ -103,22 +109,25 @@ def format_size(s):
 
 def download_if_not_exist(url, path, file=True):
     path = pathlib.Path(path)
-    if file:
-        t0 = time.perf_counter()
-
-        with requests.get(url, stream=True) as r:
-            r.raise_for_status()
-            with path.open("wb") as f:
-                shutil.copyfileobj(r.raw, f)
-        dt = time.perf_counter() - t0
-        print(f"<{r.status_code}>  {path.stat().st_size/1024/1024:.1f} MiB  {dt:.2f}s  {path.stat().st_size/dt/1024/1024:.1f} MiB/s  {path.name}")
-
-    # Not really necessary
     if not path.is_file():
-        page = requests.get(url)
-        f = open(path, 'w')
-        f.write(page.text)
-        f.close()
+        if file:
+            t0 = time.perf_counter()
+
+            with requests.get(url, stream=True) as r:
+                r.raise_for_status()
+                with path.open("wb") as f:
+                    shutil.copyfileobj(r.raw, f)
+            dt = time.perf_counter() - t0
+            print(f"<{r.status_code}>  {path.stat().st_size/1024/1024:.1f} MiB  {dt:.2f}s  {path.stat().st_size/dt/1024/1024:.1f} MiB/s  {path.name}")
+
+        # Not really necessary
+        else:
+            page = requests.get(url)
+            f = open(path, 'w')
+            f.write(page.text)
+            f.close()
+    else:
+        print(f"Skipped: {url}")
 
 def download_NHANES():
     """ Downloads data .XPT files and documentation .HTM files from the NHANES website """
@@ -140,8 +149,8 @@ def download_NHANES():
                 label = cols[0].text.strip()
                 #updated = cols[4].text.strip()
 
-                file1 = cols[1].find("a")
-                file2 = cols[2].find("a")
+                file1 = cols[-3].find("a")
+                file2 = cols[-2].find("a")
                 if file1 is None or file2 is None:
                     print('Couldnt find %s, %s, %s. Skipping' % (year, key, r))
                     continue
